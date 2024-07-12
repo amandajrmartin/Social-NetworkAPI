@@ -16,12 +16,6 @@ const grade = async (userId) =>
     {
       $unwind: '$reactions',
     },
-    // {
-    //   $group: {
-    //     _id: new ObjectId(UserId),
-    //     overallGrade: { $avg: '$reactions.score' },
-    //   },
-    // },
   ]);
 
 module.exports = {
@@ -101,27 +95,6 @@ module.exports = {
       res.status(500).json(err);
       console.error(err);
     }
-  //  try { 
-  //   console.log('updating user...')
-  //    if (req.body.username && !req.body.email) {
-  //      const user = await User.findOne({ _id: req.params.userId })
-  //     .select('-__v').update({ username: req.body.username });
-  //     res.status(200).json(user);
-  //     } else if (!req.body.username && req.body.email) {
-  //       const user = await User.findOne({ _id: req.params.userId })
-  //       .select('-__v').update({ email: req.body.email });
-  //       res.status(200).json(user);
-  //     } else if (!req.body.username && !req.body.email) {
-  //       res.status(404).json({ message: "body must have email or username"})
-  //     } else {
-  //       const user = await User.findOne({ _id: req.params.userId })
-  //       .select('-__v').update({ username: req.body.username, email: req.body.email });
-  //       res.status(200).json(user);
-  //     }
-  //  } catch (err) {
-  //   res.status(500).json(err);
-  //   console.error(err);
-  //  }
   },
 
   async addFriend(req, res) {
