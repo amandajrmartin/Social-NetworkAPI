@@ -1,97 +1,82 @@
-const names = [
-  {
-    "username": "coolcat123",
-    "email": "coolcat123@example.com"
-  },
-  {
-    "username": "skywalker88",
-    "email": "skywalker88@example.com"
-  },
-  {
-    "username": "starfish2000",
-    "email": "starfish2000@example.com"
-  },
-  {
-    "username": "rockyroad",
-    "email": "rockyroad@example.com"
-  },
-  {
-    "username": "moonlight7",
-    "email": "moonlight7@example.com"
-  },
-  {
-    "username": "rainbowdash",
-    "email": "rainbowdash@example.com"
-  },
-  {
-    "username": "oceanblue",
-    "email": "oceanblue@example.com"
-  },
-  {
-    "username": "sunshine42",
-    "email": "sunshine42@example.com"
-  },
-  {
-    "username": "mysteryman",
-    "email": "mysteryman@example.com"
-  },
-  {
-    "username": "forestwhisper",
-    "email": "forestwhisper@example.com"
+const addDateSuffix = (date) => {
+  let dateStr = date.toString();
+  // get last char of date string
+  const lastChar = dateStr.charAt(dateStr.length - 1);
+  if (lastChar === "1" && dateStr !== "11") {
+    dateStr = `${dateStr}st`;
+  } else if (lastChar === "2" && dateStr !== "12") {
+    dateStr = `${dateStr}nd`;
+  } else if (lastChar === "3" && dateStr !== "13") {
+    dateStr = `${dateStr}rd`;
+  } else {
+    dateStr = `${dateStr}th`;
   }
-];
-
-const appDescriptions = [
-  {
-    "tweet": "Just saw the most amazing sunset today! #beautiful #nature"
-  },
-  {
-    "tweet": "Excited for the new Star Wars movie! Who's with me? #StarWars #fanboy"
-  },
-  {
-    "tweet": "Had a great day at the beach. Life is good! #beachday #relax"
-  },
-  {
-    "tweet": "Just tried the best ice cream ever. Rocky road for the win! #yum #icecreamlover"
-  },
-  {
-    "tweet": "Moonlight strolls are the best therapy. #peaceful #nightwalk"
-  },
-  {
-    "tweet": "Rainbow after the rain. Always look for the silver lining. #inspiration #positivity"
-  },
-  {
-    "tweet": "Surfing the waves and loving every moment. #surfing #oceanlife"
-  },
-  {
-    "tweet": "Sunny days make me so happy! #sunshine #happyvibes"
-  },
-  {
-    "tweet": "Sometimes, it's good to get lost in a book. #reading #escape"
-  },
-  {
-    "tweet": "The forest is so calming. Nature truly heals. #naturelover #forest"
-  }
-];
-
-// Get a random item given an array
-const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-// Gets a random full name
-const getRandomName = () =>
-  `${getRandomArrItem(names)} ${getRandomArrItem(names)}`;
-
-// Function to generate random assignments that we can add to student object.
-const getRandomAssignments = (int) => {
-  const results = [];
-  for (let i = 0; i < int; i++) {
-    results.push({
-      assignmentName: getRandomArrItem(appDescriptions),
-      score: Math.floor(Math.random() * (99 - 70 + 1) + 70),
-    });
-  }
-  return results;
+  return dateStr;
 };
-
-// Export the functions for use in seed.js
-module.exports = { getRandomName, getRandomAssignments };
+module.exports = (
+  timestamp,
+  { monthLength = "short", dateSuffix = true } = {}
+) => {
+  let months;
+  if (monthLength === "short") {
+    months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+  } else {
+    months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+  }
+  const dateObj = new Date(timestamp);
+  const formattedMonth = months[dateObj.getMonth()];
+  let dayOfMonth;
+  if (dateSuffix) {
+    dayOfMonth = addDateSuffix(dateObj.getDate());
+  } else {
+    dayOfMonth = dateObj.getDate();
+  }
+  const year = dateObj.getFullYear();
+  let hour;
+  // check for 24-hr time
+  if (dateObj.getHours() > 12) {
+    hour = Math.floor(dateObj.getHours() / 2);
+  } else {
+    hour = dateObj.getHours();
+  }
+  // if hour is 0 (12:00am), change it to 12
+  if (hour === 0) {
+    hour = 12;
+  }
+  const minutes = dateObj.getMinutes();
+  // set `am` or `pm`
+  let periodOfDay;
+  if (dateObj.getHours() >= 12) {
+    periodOfDay = "pm";
+  } else {
+    periodOfDay = "am";
+  }
+  const formattedTimeStamp = `${formattedMonth} ${dayOfMonth}, ${year} at ${hour}:${minutes} ${periodOfDay}`;
+  return formattedTimeStamp;
+};
