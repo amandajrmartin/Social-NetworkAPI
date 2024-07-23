@@ -11,7 +11,16 @@ const {
   deleteFriend,
 } = require('../../controllers/userController');
 
-router.route('/').get(getUsers).post(createUser);
+// this route is prefixed with /api/users
+router.route('/')
+      .get(getUsers)
+      .post(createUser);
+
+//router.get('/', (req, res) => {
+  // inside the route we run our DB logic
+
+  // response to who called us
+//})
 
 
 router.route('/:userId').get(getSingleUser).delete(deleteUser).put(updateUser);
